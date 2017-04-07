@@ -1,0 +1,18 @@
+#!/bin/bash
+
+IP="74.110.137.121"
+PORT="8080"
+LEAGUE=$1
+TIER=$2
+SEASON=$3
+HOME=$4
+AWAY=$5
+ROUND=$6
+
+URL="http://${IP}:${PORT}"
+API="${URL}/api"
+
+curl -X DELETE \
+-H "Content-Type: application/json" \
+-d '{"round":'${ROUND}',"score":'${SCORE}'}' \
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/${AWAY}/${ROUND}"

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+IP="74.110.137.121"
+PORT="8080"
+LEAGUE=$1
+TIER=$2
+SEASON=$3
+HOME=$4
+AWAY=$5
+
+URL="http://${IP}:${PORT}"
+API="${URL}/api"
+
+curl -X GET \
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/${AWAY}"
