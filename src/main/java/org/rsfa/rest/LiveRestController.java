@@ -60,8 +60,19 @@ public class LiveRestController {
   public ResponseEntity<List<ResultInfo>> getResults(@PathVariable("ctty") String ctty,
                                                      @PathVariable("season") String season,
                                                      @PathVariable("tier") String tier,
-                                                     @PathVariable("home") int home,
-                                                     @PathVariable("away") int away) {
+                                                     @PathVariable("home") String home,
+                                                     @PathVariable("away") String away) {
+    List<ResultInfo> allRes = leagueService.getResults(ctty, tier, season, home, away);
+    return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
+  }
+
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}", method = RequestMethod.GET)
+  public ResponseEntity<List<ResultInfo>> getAvailableRounds(
+      @PathVariable("ctty") String ctty,
+      @PathVariable("season") String season,
+      @PathVariable("tier") String tier,
+      @PathVariable("home") String home,
+      @PathVariable("away") String away) {
     List<ResultInfo> allRes = leagueService.getResults(ctty, tier, season, home, away);
     return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
   }
@@ -71,8 +82,8 @@ public class LiveRestController {
   public ResponseEntity<ResultInfo> setResult(@PathVariable("ctty") String ctty,
                                                @PathVariable("tier") String tier,
                                                @PathVariable("season") String season,
-                                               @PathVariable("home") int home,
-                                               @PathVariable("away") int away,
+                                               @PathVariable("home") String home,
+                                               @PathVariable("away") String away,
                                                @RequestBody ScoreInfo sc) {
     ResultInfo result = leagueService.setResult(ctty, tier, season, home, away, sc);
     return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);
@@ -83,8 +94,8 @@ public class LiveRestController {
   public ResponseEntity<ResultInfo> deleteResult(@PathVariable("ctty") String ctty,
                                                  @PathVariable("tier") String tier,
                                                  @PathVariable("season") String season,
-                                                 @PathVariable("home") int home,
-                                                 @PathVariable("away") int away,
+                                                 @PathVariable("home") String home,
+                                                 @PathVariable("away") String away,
                                                  @PathVariable("round") int round) {
     ResultInfo result = leagueService.deleteResult(ctty, tier, season, home, away, round);
     return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);

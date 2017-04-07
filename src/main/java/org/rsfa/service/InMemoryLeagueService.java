@@ -28,10 +28,11 @@ public class InMemoryLeagueService implements LeagueService {
   private Map<String, League> leagues = new HashMap<>();
 
   @Override
-  public SeasonInfo getSeason(final String ctty,
-                              final String tier,
-                              final String season,
-                              final boolean reload) {
+  public SeasonInfo getSeason(
+      final String ctty,
+      final String tier,
+      final String season,
+      final boolean reload) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, reload);
     lg.setMetadata(new LeagueMetadata(Integer.parseInt(season), tier, 0));
     lg.sort();
@@ -39,9 +40,10 @@ public class InMemoryLeagueService implements LeagueService {
   }
 
   @Override
-  public Boolean saveSeason(final String ctty,
-                            final String tier,
-                            final String season) {
+  public Boolean saveSeason(
+      final String ctty,
+      final String tier,
+      final String season) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     try {
       lg.save();
@@ -52,19 +54,20 @@ public class InMemoryLeagueService implements LeagueService {
   }
 
   @Override
-  public List<ResultInfo> getResults(final String ctty,
-                                     final String tier,
-                                     final String season,
-                                     final int home,
-                                     final int away) {
+  public List<ResultInfo> getResults(
+      final String ctty,
+      final String tier,
+      final String season,
+      final String home,
+      final String away) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return Collections.EMPTY_LIST;
     };
     lg.sort();
     System.out.println(lg.toString());
-    int h = lg.findId(home);
-    int a = lg.findId(away);
+    int h = lg.findMnem(home);
+    int a = lg.findMnem(away);
     if (h == Constants.UNKNOWN || a == Constants.UNKNOWN) return Collections.EMPTY_LIST;
     List<FixtureResult> res = lg.getRes().vs(h, a);
     return res.stream()
@@ -73,18 +76,37 @@ public class InMemoryLeagueService implements LeagueService {
   }
 
   @Override
-  public ResultInfo setResult(final String ctty,
-                              final String tier,
-                              final String season,
-                              final int home,
-                              final int away,
-                              final ScoreInfo si) {
+  public List<Integer> getAvailableRounds(
+      final String ctty,
+      final String tier,
+      final String season,
+      final String home,
+      final String away) {
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
+    if (lg == null) { return Collections.EMPTY_LIST; }
+    int h = lg.findMnem(home);
+    int a = lg.findMnem(away);
+    int y = Integer.parseInt(season);
+    if (h == Constants.UNKNOWN || a == Constants.UNKNOWN) return Collections.EMPTY_LIST;
+    Set<Integer> common = lg.getRes().availableRounds(h, a);
+    common.add(lg.getRes().lastRound()+1);
+    return new ArrayList<Integer>(common);
+  }
+
+  @Override
+  public ResultInfo setResult(
+      final String ctty,
+      final String tier,
+      final String season,
+      final String home,
+      final String away,
+      final ScoreInfo si) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return null;
     };
-    int h = lg.findId(home);
-    int a = lg.findId(away);
+    int h = lg.findMnem(home);
+    int a = lg.findMnem(away);
     int y = Integer.parseInt(season);
     if (h == Constants.UNKNOWN || a == Constants.UNKNOWN) return null;
     FixtureResult fr = FixtureResult.from(h, a, y, si.getRound(), si.getScore());
@@ -97,18 +119,19 @@ public class InMemoryLeagueService implements LeagueService {
     return ResultInfo.from(fr, lg.nickOf(h), lg.nickOf(a));
   }
 
-  public ResultInfo deleteResult(final String ctty,
-                                 final String tier,
-                                 final String season,
-                                 final int home,
-                                 final int away,
-                                 final int round) {
+  public ResultInfo deleteResult(
+      final String ctty,
+      final String tier,
+      final String season,
+      final String home,
+      final String away,
+      final int round) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return null;
     };
-    int h = lg.findId(home);
-    int a = lg.findId(away);
+    int h = lg.findMnem(home);
+    int a = lg.findMnem(away);
     int y = Integer.parseInt(season);
     if (h == Constants.UNKNOWN || a == Constants.UNKNOWN) return null;
     FixtureResult fr = lg.getResult(h, a, round);
@@ -125,10 +148,11 @@ public class InMemoryLeagueService implements LeagueService {
   }
 
   @Override
-  public List<ResultInfo> getRound(final String ctty,
-                                   final String tier,
-                                   final String season,
-                                   final int rd) {
+  public List<ResultInfo> getRound(
+      final String ctty,
+      final String tier,
+      final String season,
+      final int rd) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return Collections.EMPTY_LIST;

@@ -125,17 +125,17 @@ public class Results {
     return avh;
   }
 
-  public OptionalInt firstRound() {
+  public Integer firstRound() {
     return data.stream()
         .mapToInt(r -> r.getFixture().getRound())
         .filter(r -> r > 0)
-        .min();
+        .min().orElse(-1);
   }
 
-  public OptionalInt lastRound() {
+  public Integer lastRound() {
     return data.stream()
         .mapToInt(r -> r.getFixture().getRound())
-        .max();
+        .max().orElse(-1);
   }
 
 }
