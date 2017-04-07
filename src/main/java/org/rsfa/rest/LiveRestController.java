@@ -66,7 +66,7 @@ public class LiveRestController {
     return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}", method = RequestMethod.GET)
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/slots/{home}/{away}", method = RequestMethod.GET)
   public ResponseEntity<List<ResultInfo>> getAvailableRounds(
       @PathVariable("ctty") String ctty,
       @PathVariable("season") String season,
