@@ -267,6 +267,10 @@ public class League {
     res.add(fr);
   }
 
+  public FixtureResult getResult(int i, int j, int k) {
+    return getRes().getResult(i, j, k);
+  }
+
   public void deleteResult(FixtureResult fr) { res.delete(fr); }
 
   public void countResult(FixtureResult fr) {

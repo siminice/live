@@ -12,7 +12,12 @@ import java.util.List;
 public interface LeagueService {
   public SeasonInfo getSeason(final String ctty,
                               final String tier,
-                              final String season);
+                              final String season,
+                              final boolean reload);
+
+  public Boolean saveSeason(final String ctty,
+                            final String tier,
+                            final String season);
 
   public List<ResultInfo> getResults(final String ctty,
                                      final String tier,
@@ -26,6 +31,13 @@ public interface LeagueService {
                               final int home,
                               final int away,
                               final ScoreInfo sc);
+
+  public ResultInfo deleteResult(final String ctty,
+                                 final String tier,
+                                 final String season,
+                                 final int home,
+                                 final int away,
+                                 final int round);
 
   public List<ResultInfo> getRound(final String ctty,
                                    final String tier,

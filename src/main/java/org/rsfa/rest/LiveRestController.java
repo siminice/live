@@ -37,13 +37,26 @@ public class LiveRestController {
   }
 
   @RequestMapping(value="/leagues/{ctty}/{tier}/{season}", method = RequestMethod.GET)
-  public ResponseEntity<SeasonInfo> getSeason(@PathVariable("ctty") String ctty,
+  public ResponseEntity<SeasonInfo> getLeague(@PathVariable("ctty") String ctty,
                                               @PathVariable("tier") String tier,
-                                              @PathVariable("season") String season) {
-    return new ResponseEntity<SeasonInfo>(leagueService.getSeason(ctty, tier, season), HttpStatus.OK);
+                                              @PathVariable("season") String season,
+                                              @RequestParam(value="reload", required=false) Boolean reload) {
+    try {
+      SeasonInfo si = leagueService.getSeason(ctty, tier, season, reload!=null && reload.booleanValue());
+      return new ResponseEntity<SeasonInfo>(si, HttpStatus.OK);
+    } catch (Exception e) {
+      return new ResponseEntity<SeasonInfo>(new SeasonInfo(), HttpStatus.NOT_FOUND);
+    }
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/{home}/{away}", method = RequestMethod.GET)
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}", method = RequestMethod.PUT)
+  public ResponseEntity<Boolean> saveLeague(@PathVariable("ctty") String ctty,
+                                            @PathVariable("tier") String tier,
+                                            @PathVariable("season") String season) {
+    return new ResponseEntity<Boolean>(leagueService.saveSeason(ctty, tier, season), HttpStatus.OK);
+  }
+
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}", method = RequestMethod.GET)
   public ResponseEntity<List<ResultInfo>> getResults(@PathVariable("ctty") String ctty,
                                                      @PathVariable("season") String season,
                                                      @PathVariable("tier") String tier,
@@ -53,15 +66,27 @@ public class LiveRestController {
     return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/{home}/{away}",
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}",
       method = RequestMethod.PUT, consumes = "application/json; charset=UTF-8")
-  public ResponseEntity<ResultInfo> setResults(@PathVariable("ctty") String ctty,
+  public ResponseEntity<ResultInfo> setResult(@PathVariable("ctty") String ctty,
                                                @PathVariable("tier") String tier,
                                                @PathVariable("season") String season,
                                                @PathVariable("home") int home,
                                                @PathVariable("away") int away,
                                                @RequestBody ScoreInfo sc) {
     ResultInfo result = leagueService.setResult(ctty, tier, season, home, away, sc);
+    return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);
+  }
+
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}/{round}",
+      method = RequestMethod.DELETE)
+  public ResponseEntity<ResultInfo> deleteResult(@PathVariable("ctty") String ctty,
+                                                 @PathVariable("tier") String tier,
+                                                 @PathVariable("season") String season,
+                                                 @PathVariable("home") int home,
+                                                 @PathVariable("away") int away,
+                                                 @PathVariable("round") int round) {
+    ResultInfo result = leagueService.deleteResult(ctty, tier, season, home, away, round);
     return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);
   }
 

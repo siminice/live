@@ -8,6 +8,7 @@ import org.rsfa.model.league.Fed;
 import org.rsfa.model.league.League;
 import org.rsfa.model.league.LeagueMetadata;
 import org.rsfa.model.league.LeaguePrinter;
+import org.rsfa.model.results.Fixture;
 import org.rsfa.model.results.FixtureResult;
 import org.rsfa.model.stats.StatSorter;
 import org.rsfa.util.Constants;
@@ -28,12 +29,26 @@ public class InMemoryLeagueService implements LeagueService {
 
   @Override
   public SeasonInfo getSeason(final String ctty,
-                                  final String tier,
-                                  final String season) {
-    League lg = getLeague(ctty + "/" + tier + "/" + season);
+                              final String tier,
+                              final String season,
+                              final boolean reload) {
+    League lg = getLeague(ctty + "/" + tier + "/" + season, reload);
     lg.setMetadata(new LeagueMetadata(Integer.parseInt(season), tier, 0));
     lg.sort();
     return SeasonInfo.from(lg);
+  }
+
+  @Override
+  public Boolean saveSeason(final String ctty,
+                            final String tier,
+                            final String season) {
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
+    try {
+      lg.save();
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
   }
 
   @Override
@@ -42,7 +57,7 @@ public class InMemoryLeagueService implements LeagueService {
                                      final String season,
                                      final int home,
                                      final int away) {
-    League lg = getLeague(ctty + "/" + tier + "/" + season);
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return Collections.EMPTY_LIST;
     };
@@ -64,7 +79,7 @@ public class InMemoryLeagueService implements LeagueService {
                               final int home,
                               final int away,
                               final ScoreInfo si) {
-    League lg = getLeague(ctty + "/" + tier + "/" + season);
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return null;
     };
@@ -82,12 +97,39 @@ public class InMemoryLeagueService implements LeagueService {
     return ResultInfo.from(fr, lg.nickOf(h), lg.nickOf(a));
   }
 
+  public ResultInfo deleteResult(final String ctty,
+                                 final String tier,
+                                 final String season,
+                                 final int home,
+                                 final int away,
+                                 final int round) {
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
+    if (lg == null) {
+      return null;
+    };
+    int h = lg.findId(home);
+    int a = lg.findId(away);
+    int y = Integer.parseInt(season);
+    if (h == Constants.UNKNOWN || a == Constants.UNKNOWN) return null;
+    FixtureResult fr = lg.getResult(h, a, round);
+    if (fr.getFixture().equals(Fixture.UNKNOWN)) {
+      return new ResultInfo();
+    }
+    lg.deleteResult(fr);
+    lg.discountResult(fr);
+    StatSorter ss = new StatSorter(lg);
+    ss.sort();
+    LeaguePrinter lp = new LeaguePrinter(lg, Arrays.asList(h, a));
+    System.out.println(lp.print());
+    return ResultInfo.from(fr, lg.nickOf(h), lg.nickOf(a));
+  }
+
   @Override
   public List<ResultInfo> getRound(final String ctty,
                                    final String tier,
                                    final String season,
                                    final int rd) {
-    League lg = getLeague(ctty + "/" + tier + "/" + season);
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
     if (lg == null) {
       return Collections.EMPTY_LIST;
     };
@@ -102,8 +144,9 @@ public class InMemoryLeagueService implements LeagueService {
         .collect(Collectors.toList());
   }
 
-  private League getLeague(final String lgn) {
-    League lg = leagues.get(lgn);
+  private League getLeague(final String lgn, final Boolean reload) {
+    League lg = null;
+    if (!reload) lg = leagues.get(lgn);
     if (lg==null) lg = loadLeague(lgn);
     if (lg!=null) leagues.put(lgn, lg);
     return lg;

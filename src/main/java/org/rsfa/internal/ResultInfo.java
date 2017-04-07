@@ -2,6 +2,7 @@ package org.rsfa.internal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.rsfa.model.results.FixtureResult;
 
 import java.time.format.DateTimeFormatter;
@@ -11,12 +12,13 @@ import java.time.format.DateTimeFormatter;
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ResultInfo {
-  private String home;
-  private String away;
-  private String round;
-  private String date;
-  private String score;
+  private String home = "";
+  private String away = "";
+  private String round = "";
+  private String date = "";
+  private String score = "";
 
   public static ResultInfo from(final FixtureResult r, final String home, final String away) {
     return new ResultInfo(
