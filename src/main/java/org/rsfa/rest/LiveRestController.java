@@ -67,14 +67,14 @@ public class LiveRestController {
   }
 
   @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/slots/{home}/{away}", method = RequestMethod.GET)
-  public ResponseEntity<List<ResultInfo>> getAvailableRounds(
+  public ResponseEntity<List<Integer>> getAvailableRounds(
       @PathVariable("ctty") String ctty,
       @PathVariable("season") String season,
       @PathVariable("tier") String tier,
       @PathVariable("home") String home,
       @PathVariable("away") String away) {
-    List<ResultInfo> allRes = leagueService.getResults(ctty, tier, season, home, away);
-    return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
+    List<Integer> common = leagueService.getAvailableRounds(ctty, tier, season, home, away);
+    return new ResponseEntity<List<Integer>>(common, HttpStatus.OK);
   }
 
   @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}",
