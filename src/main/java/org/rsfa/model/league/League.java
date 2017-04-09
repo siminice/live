@@ -80,7 +80,7 @@ public class League {
       format.setPromo(promo);
       format.setReleg(releg);
       format.setWinter(fed.isWinter(year));
-      log.debug("{} {}: {}", fed.getCtty(), year, format.getWinter()?"winter":"fall");
+      log.error("{} {}: {}", fed.getCtty(), year, format.getWinter()?"winter":"fall");
 
       for (int i = 0; i < size; i++) {
         stat[i] = new Stat();

@@ -171,7 +171,7 @@ public class Results {
     Map<Integer, List<FixtureResult>> groups = data.stream()
         .collect(Collectors.groupingBy(r->r.getResult().getZ().getYear()));
     groups.keySet().stream()
-        .forEach(k -> log.debug("{} -> {}", k, groups.get(k).size()));
+        .forEach(k -> log.error("{} -> {}", k, groups.get(k).size()));
   }
 
 }
