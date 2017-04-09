@@ -100,19 +100,23 @@ public class Fed {
         winter[i] = Interval.range(Integer.parseInt(tk[0]), Integer.parseInt(tk[1]));
       }
       br.close();
-      log.error("Loaded: {} intervals", winter.length);
-      for (Interval i : winter) {
-        log.error("[{} - {}]", i.getStart().getYear(), i.getEnd().getYear());
-      }
+      logWinter();
     } catch (final Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  private void logWinter() {
+    log.error("Winter: {} intervals", winter.length);
+    for (Interval i : winter) {
+      log.error("[{} - {}]", i.getStart().getYear(), i.getEnd().getYear());
     }
   }
 
   public boolean isWinter(int y) {
     if (winter==null) return false;
     for (int i=0; i<winter.length; i++) {
-      if (i>=winter[i].getStart().getYear() && i<=winter[i].getEnd().getYear()) return true;
+      if (y>=winter[i].getStart().getYear() && y<=winter[i].getEnd().getYear()) return true;
     }
     return false;
   }

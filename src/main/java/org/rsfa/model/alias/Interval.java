@@ -64,6 +64,10 @@ public class Interval {
     return Duration.between(start, end);
   }
 
+  public boolean contains(LocalDate d) {
+    return !d.isBefore(start) && !d.isAfter(end);
+  }
+
   @Override
   public String toString() {
     return INTERVAL_START
