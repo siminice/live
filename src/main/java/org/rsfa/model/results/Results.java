@@ -138,4 +138,34 @@ public class Results {
         .max().orElse(-1);
   }
 
+  public Set<LocalDate> datesOfRound(int r) {
+    Collection<FixtureResult> first = round(1);
+    return first.stream()
+        .map(fr -> fr.getResult().getZ())
+        .collect(Collectors.toSet());
+  }
+
+  public LocalDate firstDate() {
+    return datesOfRound(1).stream()
+        .min((d1, d2) -> d1.compareTo(d2)).orElse(LocalDate.MAX);
+  }
+
+  public LocalDate lastDate() {
+    return data.stream()
+        .map(d -> d.getResult().getZ())
+        .max((d1, d2) -> d1.compareTo(d2)).orElse(LocalDate.MIN);
+  }
+
+  public void adjustYear() {
+    LocalDate first = firstDate();
+    data.stream()
+        .forEach(r -> {
+          TimedResult curr = r.getResult();
+          LocalDate curd = curr.getZ();
+          if (!curd.isBefore(first)) {
+            curr.setZ(curd.minusYears(1));
+          }
+        });
+  }
+
 }

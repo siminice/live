@@ -2,6 +2,7 @@ package org.rsfa.model.league;
 
 import lombok.Getter;
 import org.rsfa.model.alias.AliasTimeline;
+import org.rsfa.model.alias.Interval;
 import org.rsfa.util.Syntax;
 
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ public class Fed {
   private @Getter int size;
   private @Getter final String ctty;
   private Club[] club;
+  private Interval[] winter = null;
 
   public Fed(final String ct) {
     ctty = ct;
@@ -78,6 +80,34 @@ public class Fed {
     } catch (final Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public void loadWinter(final String afile) {
+    try {
+      final FileInputStream fstream = new FileInputStream(afile);
+      final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
+      final BufferedReader br = new BufferedReader(dis);
+      String s = br.readLine();
+      final String[] tkh = s.split(" ");
+      int numW = Integer.parseInt(tkh[0]);
+      winter = new Interval[numW];
+      for (int i = 0; i < numW; ++i) {
+        s = br.readLine();
+        String tk[] = s.split(" ");
+        winter[i] = Interval.range(Integer.parseInt(tk[0]), Integer.parseInt(tk[1]));
+      }
+      br.close();
+    } catch (final Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  public boolean isWinter(int y) {
+    if (winter==null) return false;
+    for (int i=0; i<winter.length; i++) {
+      if (i>=winter[i].getStart().getYear() && i<=winter[i].getEnd().getYear()) return true;
+    }
+    return false;
   }
 
   public Collection<AliasTimeline> getAliases() {

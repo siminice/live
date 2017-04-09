@@ -42,11 +42,11 @@ public class League {
   public void load(String ifile) {
     size = 0;
     filename = ifile;
+    int year = 0;
     try {
       String tkf[] = ifile.split("\\.");
-      setMetadata(new LeagueMetadata(
-          Integer.parseInt(tkf[1]),
-          tkf[0], 0));
+      year = Integer.parseInt(tkf[1]);
+      setMetadata(new LeagueMetadata(year, tkf[0], 0));
 
       final FileInputStream fstream = new FileInputStream(ifile);
       final DataInputStream dis = new DataInputStream(fstream);
@@ -77,6 +77,7 @@ public class League {
       releg[1] = Integer.parseInt(tkh[6]);
       format.setPromo(promo);
       format.setReleg(releg);
+      format.setWinter(fed.isWinter(year));
 
       for (int i = 0; i < size; i++) {
         stat[i] = new Stat();
@@ -129,6 +130,7 @@ public class League {
         }
       }
       dis.close();
+      if (!getFormat().getWinter()) { getRes().adjustYear(); }
     } catch (final Exception e) {
       e.printStackTrace();
     }

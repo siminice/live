@@ -23,6 +23,10 @@ public class Interval {
   @Getter @Setter private LocalDate start = LocalDate.of(1800,1,1);
   @Getter @Setter private LocalDate end = LocalDate.of(9999,12,31);
 
+  public static Interval range(int year1, int year2) {
+    return new Interval(LocalDate.of(year1,1,1), LocalDate.of(year2,12,31));
+  }
+
   public static Interval parse(String s) {
     LocalDate startDate;
     LocalDate endDate;

@@ -198,6 +198,7 @@ public class InMemoryLeagueService implements LeagueService {
     Fed fed = new Fed(ctty);
     fed.loadClubs(path + "/teams.dat", Syntax.FIXED);
     fed.loadChainedAliases(path + "/alias.dat");
+    fed.loadWinter(path + "/winter.dat");
     return fed;
   }
 
