@@ -2,6 +2,7 @@ package org.rsfa.model.results;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.rsfa.model.stats.Stat;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 /**
  * Created by radu on 12/1/16.
  */
+@Slf4j
 public class Results {
   @Setter @Getter private int n;
   @Setter @Getter private int m;
@@ -166,6 +168,10 @@ public class Results {
             curr.setZ(curd.minusYears(1));
           }
         });
+    Map<Integer, List<FixtureResult>> groups = data.stream()
+        .collect(Collectors.groupingBy(r->r.getResult().getZ().getYear()));
+    groups.keySet().stream()
+        .forEach(k -> log.debug("{} -> {}", k, groups.get(k).size()));
   }
 
 }

@@ -3,6 +3,7 @@ package org.rsfa.model.league;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.rsfa.model.results.Fixture;
 import org.rsfa.model.results.FixtureResult;
 import org.rsfa.model.results.Results;
@@ -20,6 +21,7 @@ import static org.rsfa.util.Constants.UNKNOWN;
 /**
  * Created by radu on 11/30/16.
  */
+@Slf4j
 @NoArgsConstructor
 public class League {
   @Setter @Getter private Fed fed;
@@ -78,6 +80,7 @@ public class League {
       format.setPromo(promo);
       format.setReleg(releg);
       format.setWinter(fed.isWinter(year));
+      log.debug("{} {}: {}", fed.getCtty(), year, format.getWinter()?"winter":"fall");
 
       for (int i = 0; i < size; i++) {
         stat[i] = new Stat();
