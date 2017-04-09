@@ -1,6 +1,7 @@
 package org.rsfa.model.league;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.rsfa.model.alias.AliasTimeline;
 import org.rsfa.model.alias.Interval;
 import org.rsfa.util.Syntax;
@@ -17,6 +18,7 @@ import static org.rsfa.util.Constants.UNKNOWN;
 /**
  * Created by radu on 11/30/16.
  */
+@Slf4j
 public class Fed {
   private @Getter int size;
   private @Getter final String ctty;
@@ -83,6 +85,7 @@ public class Fed {
   }
 
   public void loadWinter(final String afile) {
+    log.error("Loading winter for {} from {}.", getCtty(), afile);
     try {
       final FileInputStream fstream = new FileInputStream(afile);
       final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
@@ -97,6 +100,7 @@ public class Fed {
         winter[i] = Interval.range(Integer.parseInt(tk[0]), Integer.parseInt(tk[1]));
       }
       br.close();
+      log.error("Loaded: {}", winter.toString());
     } catch (final Exception e) {
       e.printStackTrace();
     }
