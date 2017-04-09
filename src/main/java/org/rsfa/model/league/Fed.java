@@ -85,7 +85,7 @@ public class Fed {
   }
 
   public void loadWinter(final String afile) {
-    log.error("Loading winter for {} from {}.", getCtty(), afile);
+    log.error("Loading winter for {} from {}", getCtty(), afile);
     try {
       final FileInputStream fstream = new FileInputStream(afile);
       final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
@@ -100,7 +100,10 @@ public class Fed {
         winter[i] = Interval.range(Integer.parseInt(tk[0]), Integer.parseInt(tk[1]));
       }
       br.close();
-      log.error("Loaded: {}", winter.toString());
+      log.error("Loaded: {} intervals", winter.length);
+      for (Interval i : winter) {
+        log.error("[{} - {}]", i.getStart().getYear(), i.getEnd().getYear());
+      }
     } catch (final Exception e) {
       e.printStackTrace();
     }
