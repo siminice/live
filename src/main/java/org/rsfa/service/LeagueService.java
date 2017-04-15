@@ -51,6 +51,11 @@ public interface LeagueService {
       final String away,
       final int round);
 
+  public List<Integer> getAllRounds(
+      final String ctty,
+      final String tier,
+      final String season);
+
   public List<ResultInfo> getRound(
       final String ctty,
       final String tier,

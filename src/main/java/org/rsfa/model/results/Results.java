@@ -66,13 +66,6 @@ public class Results {
         .collect(Collectors.toList());
   }
 
-  /*
-  public Map<Integer, Collection<FixtureResult>> byRound(int r) {
-    return res.stream()
-        .collect(Collectors.groupingBy(x -> x.getFixture().getRound(),
-            Collectors.mapping(Function.identity(), Collectors.toSet()));
-  }
-*/
 
   public Collection<FixtureResult> filterByTeam(int t) {
     return data.stream()
@@ -80,23 +73,6 @@ public class Results {
         .collect(Collectors.toList());
   }
 
-  public String serialize(int i, int k) {
-    StringBuilder sb = new StringBuilder();
-    for (int j=0; j<n; j++) {
-      sb.append(getResult(i, j, k).serialize()+" ");
-    }
-    return sb.toString();
-  }
-
-  public String serialize() {
-    StringBuilder sb = new StringBuilder();
-    for (int k=0; k<m; k++) {
-      for (int i=0; i<n; i++) {
-        sb.append(serialize(i, k)+"\n");
-      }
-    }
-    return sb.toString();
-  }
 
   public Map<Integer, Long> roundsFreq() {
     return data.stream()
@@ -174,4 +150,21 @@ public class Results {
         .forEach(k -> log.error("{} -> {}", k, groups.get(k).size()));
   }
 
+  public String serialize(int i, int k) {
+    StringBuilder sb = new StringBuilder();
+    for (int j=0; j<n; j++) {
+      sb.append(getResult(i, j, k).serialize()+" ");
+    }
+    return sb.toString();
+  }
+
+  public String serialize() {
+    StringBuilder sb = new StringBuilder();
+    for (int k=0; k<m; k++) {
+      for (int i=0; i<n; i++) {
+        sb.append(serialize(i, k)+"\n");
+      }
+    }
+    return sb.toString();
+  }
 }

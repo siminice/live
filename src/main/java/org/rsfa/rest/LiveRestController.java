@@ -56,7 +56,7 @@ public class LiveRestController {
     return new ResponseEntity<Boolean>(leagueService.saveSeason(ctty, tier, season), HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}", method = RequestMethod.GET)
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/vs/{away}", method = RequestMethod.GET)
   public ResponseEntity<List<ResultInfo>> getResults(@PathVariable("ctty") String ctty,
                                                      @PathVariable("season") String season,
                                                      @PathVariable("tier") String tier,
@@ -66,7 +66,19 @@ public class LiveRestController {
     return new ResponseEntity<List<ResultInfo>>(allRes, HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/slots/{home}/{away}", method = RequestMethod.GET)
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/all/{away}", method = RequestMethod.GET)
+  public ResponseEntity<List<ResultInfo>> getBothResults(@PathVariable("ctty") String ctty,
+                                                     @PathVariable("season") String season,
+                                                     @PathVariable("tier") String tier,
+                                                     @PathVariable("home") String home,
+                                                     @PathVariable("away") String away) {
+    List<ResultInfo> resHome = leagueService.getResults(ctty, tier, season, home, away);
+    List<ResultInfo> resAway = leagueService.getResults(ctty, tier, season, away, home);
+    resHome.addAll(resAway);
+    return new ResponseEntity<List<ResultInfo>>(resHome, HttpStatus.OK);
+  }
+
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/rounds/{home}/vs/{away}", method = RequestMethod.GET)
   public ResponseEntity<List<Integer>> getAvailableRounds(
       @PathVariable("ctty") String ctty,
       @PathVariable("season") String season,
@@ -77,7 +89,7 @@ public class LiveRestController {
     return new ResponseEntity<List<Integer>>(common, HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}",
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/vs/{away}",
       method = RequestMethod.PUT, consumes = "application/json; charset=UTF-8")
   public ResponseEntity<ResultInfo> setResult(@PathVariable("ctty") String ctty,
                                                @PathVariable("tier") String tier,
@@ -89,7 +101,7 @@ public class LiveRestController {
     return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);
   }
 
-  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/{away}/{round}",
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/results/{home}/vs/{away}/{round}",
       method = RequestMethod.DELETE)
   public ResponseEntity<ResultInfo> deleteResult(@PathVariable("ctty") String ctty,
                                                  @PathVariable("tier") String tier,
@@ -99,6 +111,14 @@ public class LiveRestController {
                                                  @PathVariable("round") int round) {
     ResultInfo result = leagueService.deleteResult(ctty, tier, season, home, away, round);
     return new ResponseEntity<ResultInfo>(result, HttpStatus.OK);
+  }
+
+  @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/rounds", method = RequestMethod.GET)
+  public ResponseEntity<List<Integer>> getRound(@PathVariable("ctty") String ctty,
+                                                   @PathVariable("tier") String tier,
+                                                   @PathVariable("season") String season) {
+    List<Integer> allRes = leagueService.getAllRounds(ctty, tier, season);
+    return new ResponseEntity<List<Integer>>(allRes, HttpStatus.OK);
   }
 
   @RequestMapping(value="/leagues/{ctty}/{tier}/{season}/rounds/{round}", method = RequestMethod.GET)

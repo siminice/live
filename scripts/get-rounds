@@ -12,4 +12,4 @@ URL="http://${IP}:${PORT}"
 API="${URL}/api"
 
 curl -X GET \
-"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/all/${AWAY}"
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/rounds/${HOME}/vs/${AWAY}"

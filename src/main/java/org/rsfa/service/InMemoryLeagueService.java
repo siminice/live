@@ -148,6 +148,20 @@ public class InMemoryLeagueService implements LeagueService {
   }
 
   @Override
+  public List<Integer> getAllRounds(
+      final String ctty,
+      final String tier,
+      final String season) {
+    League lg = getLeague(ctty + "/" + tier + "/" + season, false);
+    if (lg == null) {
+      return Collections.EMPTY_LIST;
+    };
+    System.out.println(lg.toString());
+    Map<Integer, Long> freq = lg.getRes().roundsFreq();
+    return new ArrayList<Integer>(freq.keySet());
+  }
+
+  @Override
   public List<ResultInfo> getRound(
       final String ctty,
       final String tier,
@@ -157,9 +171,6 @@ public class InMemoryLeagueService implements LeagueService {
     if (lg == null) {
       return Collections.EMPTY_LIST;
     };
-    StatSorter ss = new StatSorter(lg);
-    ss.sort();
-    System.out.println(lg.toString());
     Collection<FixtureResult> res = lg.getRes().round(rd);
     return res.stream()
         .map(r -> ResultInfo.from(r,
@@ -167,6 +178,10 @@ public class InMemoryLeagueService implements LeagueService {
             lg.nickOf(r.getFixture().getAway())))
         .collect(Collectors.toList());
   }
+
+  /*
+   * Helper methods
+   */
 
   private League getLeague(final String lgn, final Boolean reload) {
     League lg = null;

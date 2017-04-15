@@ -15,4 +15,4 @@ API="${URL}/api"
 curl -X DELETE \
 -H "Content-Type: application/json" \
 -d '{"round":'${ROUND}',"score":'${SCORE}'}' \
-"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/${AWAY}/${ROUND}"
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/vs/${AWAY}/${ROUND}"

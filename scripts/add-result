@@ -16,4 +16,4 @@ API="${URL}/api"
 curl -X PUT \
 -H "Content-Type: application/json" \
 -d '{"round":'${ROUND}',"score":'${SCORE}'}' \
-"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/${AWAY}"
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/vs/${AWAY}"
