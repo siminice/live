@@ -1,15 +1,19 @@
 #!/bin/bash
 
-IP="74.110.137.121"
 PORT="8080"
+IP=$(get-ip)
+JWT=$(get-jwt)
+
 LEAGUE=$1
 TIER=$2
 SEASON=$3
 HOME=$4
 AWAY=$5
+JWT=$(get-jwt)
 
 URL="http://${IP}:${PORT}"
 API="${URL}/api"
 
 curl -X GET \
+-H "Authorization: Bearer ${JWT}" \
 "${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/all/${AWAY}"

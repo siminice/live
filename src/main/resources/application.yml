@@ -1,3 +1,9 @@
 repo: '#{repo}'
 league:
   names: 'league-names.dat'
+
+security.jwt:
+  tokenExpirationTime: 1440 # 1 day in minutes
+  refreshTokenExpTime: 43200 # 30 days
+  tokenIssuer: http://rsfa.org
+  tokenSigningKey: RnMG9H9bVXW/jrB7aZcYjuZT86gVwn9TRjvkEpR0RPo=

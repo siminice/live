@@ -1,7 +1,10 @@
 #!/bin/bash
 
-IP="74.110.137.121"
 PORT="8080"
+IP=$(get-ip)
+JWT=$(get-jwt)
+-H "Authorization: Bearer ${JWT}" \
+
 LEAGUE=$1
 TIER=$2
 SEASON=$3
@@ -13,6 +16,7 @@ URL="http://${IP}:${PORT}"
 API="${URL}/api"
 
 curl -X DELETE \
+-H "Authorization: Bearer ${JWT}" \
 -H "Content-Type: application/json" \
 -d '{"round":'${ROUND}',"score":'${SCORE}'}' \
 "${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/results/${HOME}/vs/${AWAY}/${ROUND}"

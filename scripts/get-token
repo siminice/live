@@ -1,0 +1,16 @@
+#!/bin/bash
+
+IP=$(get-ip)
+PORT="8080"
+USER=$(get-user)
+PASS=$(get-pass)
+
+URL="http://${IP}:${PORT}"
+API="${URL}/api/auth/login"
+
+curl -s -X POST \
+-H "X-Requested-With: XMLHttpRequest" \
+-H "Content-Type: application/json" \
+-H "Cache-Control: no-cache" \
+-d '{"username":"'"${USER}"'", "password":"'"${PASS}"'"}' \
+"${API}" | cut -d '"' -f 4
