@@ -33,9 +33,10 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('io.jsonwebtoken:jjwt:0.7.0')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
-//	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-security')
 //	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
