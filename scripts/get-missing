@@ -13,6 +13,6 @@ AWAY=$5
 URL="http://${IP}:${PORT}"
 API="${URL}/api"
 
-curl -X GET \
+curl -s -X GET \
 -H "Authorization: Bearer ${JWT}" \
 "${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/rounds/${HOME}/vs/${AWAY}"

@@ -15,7 +15,7 @@ SCORE=$7
 URL="http://${IP}:${PORT}"
 API="${URL}/api"
 
-curl -X PUT \
+curl -s -X PUT \
 -H "Authorization: Bearer ${JWT}" \
 -H "Content-Type: application/json" \
 -d '{"round":'${ROUND}',"score":'${SCORE}'}' \
