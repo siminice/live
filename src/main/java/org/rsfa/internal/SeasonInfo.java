@@ -4,10 +4,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.rsfa.model.league.Fed;
 import org.rsfa.model.league.League;
+import org.rsfa.model.results.FixtureResult;
 import org.rsfa.model.stats.Stat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,15 +37,15 @@ public class SeasonInfo {
     si.setIds(new ArrayList<Integer>(Arrays.asList(l.getId())));
     l.resetStats();
 
-    si.setResults(l.getRes()
-        .roundFilter(r -> r>=round1 && r<=round2)
-        .stream()
+    Collection<FixtureResult> partial = l.getRes().roundFilter(r -> r>=round1 && r<=round2);
+
+    si.setResults(partial.stream()
         .map(r -> ResultInfo.from(r,
             l.nickOf(r.getFixture().getHome()),
             l.nickOf(r.getFixture().getAway())))
         .collect(Collectors.toList()));
-    l.countAllResults();
 
+    partial.stream().forEach(r -> l.countResult(r));
     ArrayList<Stat> statList = new ArrayList<Stat>(Arrays.asList(l.getStat()));
     List<StatInfo> stats = statList.stream()
         .map(s -> StatInfo.from(s))
