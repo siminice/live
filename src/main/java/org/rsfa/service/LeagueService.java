@@ -14,6 +14,8 @@ public interface LeagueService {
       final String ctty,
       final String tier,
       final String season,
+      final int round1,
+      final int round2,
       final boolean reload);
 
   public Boolean saveSeason(

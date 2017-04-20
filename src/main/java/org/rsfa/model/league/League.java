@@ -118,9 +118,9 @@ public class League {
           line = br.readLine().trim();
           final String[] tkr = line.split(" +");
           if (tkr.length < 2 * size) {
-            System.out.println("Input results error on line " + i
-                + ", " + tkr.length + " tokens instead from "
-                + (2 * size));
+            System.out.println(
+                String.format("Input results error on line {}, {} tokens instead of {}",
+                i, tkr.length, 2 * size));
           }
           for (int j = 0; j < size; j++) {
             if (2 * j + 1 < tkr.length) {
@@ -296,6 +296,12 @@ public class League {
 
   public void countAllResults() {
     res.getAll().stream().forEach(this::countResult);
+  }
+
+  public void resetStats() {
+    for (Stat s : getStat()) {
+      s.reset();
+    }
   }
 
   public String results(int i, int k) {

@@ -24,7 +24,7 @@ public class SeasonInfo {
   private List<StatInfo> stats;
   private List<ResultInfo> results;
 
-  public static SeasonInfo from(League l) {
+  public static SeasonInfo from(League l, int round1, int round2) {
     SeasonInfo si = new SeasonInfo();
     if (l==null) return si;
     Fed fed = l.getFed();
@@ -32,9 +32,17 @@ public class SeasonInfo {
     li.setCountry(fed.getCtty());
     si.setLeagueInfo(li);
     si.setFormatInfo(LeagueFormatInfo.from(l.getFormat()));
-
     si.setIds(new ArrayList<Integer>(Arrays.asList(l.getId())));
-    si.setRank(new ArrayList<Integer>(Arrays.asList(l.getRank())));
+    l.resetStats();
+
+    si.setResults(l.getRes()
+        .roundFilter(r -> r>=round1 && r<=round2)
+        .stream()
+        .map(r -> ResultInfo.from(r,
+            l.nickOf(r.getFixture().getHome()),
+            l.nickOf(r.getFixture().getAway())))
+        .collect(Collectors.toList()));
+    l.countAllResults();
 
     ArrayList<Stat> statList = new ArrayList<Stat>(Arrays.asList(l.getStat()));
     List<StatInfo> stats = statList.stream()
@@ -47,15 +55,10 @@ public class SeasonInfo {
       s.setRnk(l.rankOf(idx) + 1);
       s.setDec(l.getDeco()[idx]);
     });
-
     si.setStats(stats);
+    l.sort();
+    si.setRank(new ArrayList<Integer>(Arrays.asList(l.getRank())));
 
-
-    si.setResults(l.getRes().getAll().stream()
-        .map(r -> ResultInfo.from(r,
-            l.nickOf(r.getFixture().getHome()),
-            l.nickOf(r.getFixture().getAway())))
-        .collect(Collectors.toList()));
     return si;
   }
 }

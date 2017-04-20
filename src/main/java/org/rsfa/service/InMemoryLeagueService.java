@@ -32,11 +32,12 @@ public class InMemoryLeagueService implements LeagueService {
       final String ctty,
       final String tier,
       final String season,
+      final int round1,
+      final int round2,
       final boolean reload) {
     League lg = getLeague(ctty + "/" + tier + "/" + season, reload);
     lg.setMetadata(new LeagueMetadata(Integer.parseInt(season), tier, 0));
-    lg.sort();
-    return SeasonInfo.from(lg);
+    return SeasonInfo.from(lg, round1, round2);
   }
 
   @Override
@@ -178,6 +179,7 @@ public class InMemoryLeagueService implements LeagueService {
             lg.nickOf(r.getFixture().getAway())))
         .collect(Collectors.toList());
   }
+
 
   /*
    * Helper methods

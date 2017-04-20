@@ -1,5 +1,7 @@
 package org.rsfa.config;
 
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /**
@@ -13,11 +15,11 @@ public class LiveApplicationInitializer extends AbstractAnnotationConfigDispatch
 
   @Override
   protected Class<?>[] getServletConfigClasses() {
-    return null;
+    return new Class<?>[]{RepositoryRestMvcConfiguration.class, WebMvcAutoConfiguration.class};
   }
 
   @Override
   protected String[] getServletMappings() {
-    return new String[] { "/api" };
+    return new String[] { "/" };
   }
 }

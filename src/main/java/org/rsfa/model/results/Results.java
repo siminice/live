@@ -8,6 +8,7 @@ import org.rsfa.model.stats.Stat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -60,14 +61,27 @@ public class Results {
         .collect(Collectors.toList());
   }
 
+  public Collection<FixtureResult> roundFilter(Predicate<Integer> selector) {
+    return data.stream()
+        .filter(x -> selector.test(x.getFixture().getRound()))
+        .sorted(FixtureResult.byDate)
+        .collect(Collectors.toList());
+  }
+
   public Collection<FixtureResult> date(LocalDate z) {
     return data.stream()
         .filter(x -> x.getResult().getZ().isEqual(z))
         .collect(Collectors.toList());
   }
 
+  public Collection<FixtureResult> dateFilter(Predicate<LocalDate> selector) {
+    return data.stream()
+        .filter(x -> selector.test(x.getResult().getZ()))
+        .sorted(FixtureResult.byDate)
+        .collect(Collectors.toList());
+  }
 
-  public Collection<FixtureResult> filterByTeam(int t) {
+  public Collection<FixtureResult> teamFilter(int t) {
     return data.stream()
         .filter(r -> r.getFixture().has(t))
         .collect(Collectors.toList());
