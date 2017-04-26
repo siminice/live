@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by radu on 4/25/17.
  */
@@ -30,6 +33,7 @@ public class MatchReport {
   private String assist1 = "";
   private String assist2 = "";
   private String observ = "";
+  private List<MatchEvent> events = Collections.EMPTY_LIST;
 
   public String serialize() {
     return String.join(",", home, away, result, date, league, round, venue, attendance, weather,

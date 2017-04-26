@@ -1,25 +1,34 @@
 package org.rsfa.service;
 
+import org.rsfa.model.catalog.Catalog;
+import org.rsfa.model.catalog.MatchEvent;
 import org.rsfa.model.catalog.MatchReport;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by radu on 4/25/17.
  */
 public class InMemoryReportService implements ReportService {
-  private Map<String, Collection<MatchReport>> reports = new HashMap();
+  private Map<String, List<MatchReport>> reports = new HashMap();
+  private Map<String, List<MatchEvent>> events = new HashMap();
+  private Catalog players = new Catalog();
+
+  public void InMemoryReportService() {
+    init();
+  }
+
+  private void init() {
+    players.load(location + "catalogs/players.dat");
+  }
 
   @Override
   public MatchReport getReport(String lgn, String home, String away) {
-    Collection<MatchReport> allRep = getLeague(lgn, false);
+    List<MatchReport> allRep = getLienups(lgn, false);
     return allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away))
         .findFirst().orElse(null);
@@ -27,7 +36,7 @@ public class InMemoryReportService implements ReportService {
 
   @Override
   public MatchReport getReport(String lgn, String home, String away, String date) {
-    Collection<MatchReport> allRep = getLeague(lgn, false);
+    List<MatchReport> allRep = getLienups(lgn, false);
     return allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away) && r.getDate().equals(date))
         .findFirst().orElse(null);
@@ -37,18 +46,18 @@ public class InMemoryReportService implements ReportService {
    * Helper methods
    */
 
-  private Collection<MatchReport> getLeague(final String lgn, final Boolean reload) {
-    Collection<MatchReport> lg = null;
+  private List<MatchReport> getLienups(final String lgn, final Boolean reload) {
+    List<MatchReport> lg = null;
     if (!reload) lg = reports.get(lgn);
-    if (lg==null) lg = loadLeague(lgn);
+    if (lg==null) lg = loadLineups(lgn);
     if (lg!=null) reports.put(lgn, lg);
     return lg;
   }
 
-  private Collection<MatchReport> loadLeague(final String lgn) {
+  private List<MatchReport> loadLineups(final String lgn) {
     String[] tk = lgn.split("/");
     if (tk.length < 3) return null;
-    Collection<MatchReport> lg = new ArrayList<MatchReport>();
+    List<MatchReport> reports = new ArrayList<MatchReport>();
     String filename = location + "lineups-" + tk[2] + ".db";
     try {
       final FileInputStream fstream = new FileInputStream(filename);
@@ -56,13 +65,33 @@ public class InMemoryReportService implements ReportService {
       final BufferedReader br = new BufferedReader(dis);
       String s;
       while ((s = br.readLine()) != null) {
-          lg.add(MatchReport.from(s));
+          reports.add(MatchReport.from(s));
       }
       br.close();
     } catch (final Exception e) {
       e.printStackTrace();
     }
-    return lg;
+    attachEvents(reports, lgn);
+    return reports;
+  }
+
+  private void attachEvents(final List<MatchReport> reps, final String lgn) {
+    String[] tk = lgn.split("/");
+    if (tk.length < 3) return;
+    String filename = location + "events-" + tk[2] + ".db";
+    try {
+      final FileInputStream fstream = new FileInputStream(filename);
+      final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
+      final BufferedReader br = new BufferedReader(dis);
+      String s;
+      for (MatchReport r : reps) {
+        s = br.readLine();
+        r.setEvents(MatchEvent.from(s));
+      }
+      br.close();
+    } catch (final Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Value("${reports}")

@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Person {
-  String mnem;
-  String firstName;
-  String lastName;
+  String mnem = "";
+  String firstName = "";
+  String lastName = "";
   String displayName = "";
   String nationality = "";
   String birthDate = "";

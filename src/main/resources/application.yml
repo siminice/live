@@ -1,4 +1,6 @@
 repo: '#{repo}'
+reports: '#{reports}'
+
 league:
   names: 'league-names.dat'
 
