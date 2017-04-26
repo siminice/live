@@ -18,7 +18,7 @@ public class MatchEvent {
     MatchEvent ev = new MatchEvent();
     if (line != null && line.length() >= 10) {
       ev.setMnem(line.substring(0,6).trim());
-      ev.setType(line.substring(6,6));
+      ev.setType(line.substring(6,7));
       ev.setMin(line.substring(7,10).trim());
     }
     return ev;
