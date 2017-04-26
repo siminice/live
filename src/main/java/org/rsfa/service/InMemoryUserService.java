@@ -27,6 +27,8 @@ public class InMemoryUserService implements UserDetailsService {
   }
 
   private void init() throws IOException {
+    userDb.put("radu", new User("radu", "lcbGGgIr2N2HTh2J6WxkYObPYySRhweo3BObHiVROKo=",
+        AuthorityUtils.createAuthorityList("USER_ROLE")));
   }
 
   @Override
