@@ -12,14 +12,14 @@ import java.util.List;
 public class MatchEvent {
   String mnem = "";
   String type = "";
-  String min = "";
+  int min = 0;
 
   public static MatchEvent parse(String line) {
     MatchEvent ev = new MatchEvent();
     if (line != null && line.length() >= 10) {
       ev.setMnem(line.substring(0,6).trim());
       ev.setType(line.substring(6,7));
-      ev.setMin(line.substring(7,10).trim());
+      ev.setMin(Integer.parseInt(line.substring(7,10).trim()));
     }
     return ev;
   }
