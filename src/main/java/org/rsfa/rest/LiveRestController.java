@@ -186,6 +186,7 @@ public class LiveRestController {
 
   private Catalog retrieve(Catalog c, String filename) {
     if (c==null) {
+      c = new Catalog();
       c.load(path + "catalogs/" + filename + ".dat");
     }
     return c;
@@ -193,6 +194,7 @@ public class LiveRestController {
 
   private Locations retrieve(Locations loc, String filename) {
     if (loc==null) {
+      loc = new Locations();
       loc.load(path + "catalogs/" + filename + ".dat");
     }
     return loc;
