@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by radu on 12/13/16.
@@ -63,8 +64,10 @@ public class Catalog {
     }
   }
 
-  public int findMnem(String s) {
-    return -1;
+  public Optional<Person> findMnem(String s) {
+    return cat.stream()
+        .filter(p->p.getMnem().equals(s))
+        .findAny();
   }
 
   public int binFindMnem(String s) {

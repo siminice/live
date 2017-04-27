@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by radu on 4/25/17.
@@ -25,9 +28,9 @@ public class MatchReport {
   private String venue = "";
   private String attendance ="";
   private String weather = "";
-  private String[] hroster = new String[ROSTER_SIZE];
+  private Cap[] hroster = new Cap[0];
   private String hcoach = "";
-  private String[] aroster = new String[ROSTER_SIZE];
+  private Cap[] aroster = new Cap[0];
   private String acoach = "";
   private String ref = "";
   private String assist1 = "";
@@ -35,10 +38,10 @@ public class MatchReport {
   private String observ = "";
   private List<MatchEvent> events = Collections.EMPTY_LIST;
 
-  public String serialize() {
+  public String lineup() {
     return String.join(",", home, away, result, date, league, round, venue, attendance, weather,
-        String.join(",", hroster), hcoach,
-        String.join(",", aroster), acoach,
+        Arrays.stream(hroster).map(Cap::toString).collect(Collectors.joining(",")), hcoach,
+        Arrays.stream(aroster).map(Cap::toString).collect(Collectors.joining(",")), acoach,
         ref, assist1, assist2, observ);
   }
 
@@ -55,15 +58,13 @@ public class MatchReport {
       r.setVenue(tok[6].trim());
       r.setAttendance(tok[7].trim());
       r.setWeather(tok[8].trim());
-      r.setHroster(new String[]{
-          tok[9], tok[10], tok[11], tok[12], tok[13], tok[14], tok[15], tok[16], tok[17], tok[18], tok[19],
-          tok[20], tok[21], tok[22], tok[23], tok[24], tok[25], tok[26], tok[27], tok[28], tok[29], tok[30]
-      });
+      Cap[] hr = new Cap[ROSTER_SIZE];
+      for (int i=0; i<ROSTER_SIZE; i++) hr[i] = Cap.from(tok[9+i]);
+      r.setHroster(hr);
       r.setHcoach(tok[31]);
-      r.setAroster(new String[]{
-          tok[32], tok[33], tok[34], tok[35], tok[36], tok[37], tok[38], tok[39], tok[40], tok[41], tok[42],
-          tok[43], tok[44], tok[45], tok[46], tok[47], tok[48], tok[49], tok[50], tok[51], tok[52], tok[53]
-      });
+      Cap[] ar = new Cap[ROSTER_SIZE];
+      for (int i=0; i<ROSTER_SIZE; i++) ar[i] = Cap.from(tok[32+i]);
+      r.setAroster(ar);
       r.setAcoach(tok[54]);
       r.setRef(tok[55]);
       r.setAssist1(tok[56]);
@@ -71,5 +72,20 @@ public class MatchReport {
       r.setObserv(tok[58]);
     }
     return r;
+  }
+
+  public void mapNames(Catalog cat) {
+    Arrays.stream(hroster).forEach(c-> {
+      Optional<Person> p = cat.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
+    });
+    Arrays.stream(aroster).forEach(c-> {
+      Optional<Person> p = cat.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
+    });
+    events.stream().forEach(c-> {
+      Optional<Person> p = cat.findMnem(c.getMnem());
+      if (p.isPresent()) c.setMnem(p.get().toString());
+    });
   }
 }

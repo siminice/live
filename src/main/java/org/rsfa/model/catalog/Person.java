@@ -31,4 +31,9 @@ public class Person {
     if (firstName.length()>0 && firstName.charAt(0)!=' ') return firstName.substring(0,1) + ". ";
     else return "";
   }
+
+  @Override
+  public String toString() {
+    return initial() + lastName;
+  }
 }

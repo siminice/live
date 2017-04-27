@@ -29,17 +29,21 @@ public class InMemoryReportService implements ReportService {
   @Override
   public MatchReport getReport(String lgn, String home, String away) {
     List<MatchReport> allRep = getLienups(lgn, false);
-    return allRep.stream()
+    MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away))
         .findFirst().orElse(null);
+    report.mapNames(players);
+    return report;
   }
 
   @Override
   public MatchReport getReport(String lgn, String home, String away, String date) {
     List<MatchReport> allRep = getLienups(lgn, false);
-    return allRep.stream()
+    MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away) && r.getDate().equals(date))
         .findFirst().orElse(null);
+    report.mapNames(players);
+    return report;
   }
 
   /*
