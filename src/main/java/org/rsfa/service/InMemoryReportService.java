@@ -16,14 +16,14 @@ import java.util.*;
 public class InMemoryReportService implements ReportService {
   private Map<String, List<MatchReport>> reports = new HashMap();
   private Map<String, List<MatchEvent>> events = new HashMap();
-  private Catalog players = new Catalog();
+  private Catalog players = null;
 
-  public InMemoryReportService() {
-    init();
-  }
-
-  private void init() {
-    players.load(location + "catalogs/players.dat");
+  private Catalog retrieveCatalog() {
+    if (players == null) {
+      players = new Catalog();
+      players.load(location + "catalogs/players.dat");
+    }
+    return players;
   }
 
   @Override
@@ -32,7 +32,7 @@ public class InMemoryReportService implements ReportService {
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away))
         .findFirst().orElse(null);
-    report.mapNames(players);
+    report.mapNames(retrieveCatalog());
     return report;
   }
 
@@ -42,7 +42,7 @@ public class InMemoryReportService implements ReportService {
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away) && r.getDate().equals(date))
         .findFirst().orElse(null);
-    report.mapNames(players);
+    report.mapNames(retrieveCatalog());
     return report;
   }
 
