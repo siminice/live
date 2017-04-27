@@ -1,6 +1,5 @@
 package org.rsfa.service;
 
-import org.rsfa.model.catalog.Catalog;
 import org.rsfa.model.catalog.MatchEvent;
 import org.rsfa.model.catalog.MatchReport;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,7 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by radu on 4/25/17.
@@ -16,15 +18,6 @@ import java.util.*;
 public class InMemoryReportService implements ReportService {
   private Map<String, List<MatchReport>> reports = new HashMap();
   private Map<String, List<MatchEvent>> events = new HashMap();
-  private Catalog players = null;
-
-  private Catalog retrieveCatalog() {
-    if (players == null) {
-      players = new Catalog();
-      players.load(location + "catalogs/players.dat");
-    }
-    return players;
-  }
 
   @Override
   public MatchReport getReport(String lgn, String home, String away) {
@@ -32,7 +25,6 @@ public class InMemoryReportService implements ReportService {
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away))
         .findFirst().orElse(null);
-    report.mapNames(retrieveCatalog());
     return report;
   }
 
@@ -42,7 +34,6 @@ public class InMemoryReportService implements ReportService {
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away) && r.getDate().equals(date))
         .findFirst().orElse(null);
-    report.mapNames(retrieveCatalog());
     return report;
   }
 

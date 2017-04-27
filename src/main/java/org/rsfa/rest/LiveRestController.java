@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -201,20 +200,20 @@ public class LiveRestController {
   }
 
   private void mapNames(MatchReport report) {
-    retrieve(players, "players");
-    retrieve(coaches, "coaches");
-    retrieve(referees, "referees");
-    Arrays.stream(report.getHroster()).forEach(c-> {
+    players = retrieve(players, "players");
+    coaches = retrieve(coaches, "coaches");
+    referees = retrieve(referees, "referees");
+    report.getHroster().stream().forEach(c-> {
       Optional<Person> p = players.findMnem(c.getName());
       if (p.isPresent()) c.setName(p.get().toString());
     });
-    Arrays.stream(report.getAroster()).forEach(c-> {
+    report.getAroster().stream().forEach(c-> {
       Optional<Person> p = players.findMnem(c.getName());
       if (p.isPresent()) c.setName(p.get().toString());
     });
     report.getEvents().stream().forEach(c-> {
       Optional<Person> p = players.findMnem(c.getName());
-      if (p.isPresent()) c.setName(p.get().toString());
+      if (p.isPresent()) c.setName(p.get().longName());
     });
     Optional<Person> p;
     p = coaches.findMnem(report.getHcoach());

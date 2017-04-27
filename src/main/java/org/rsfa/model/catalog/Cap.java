@@ -22,8 +22,14 @@ public class Cap {
     return cap;
   }
 
+  public boolean isUnknown() {
+    return (name==null || name.equals("")) && min==0;
+  }
+
   @Override
   public String toString() {
     return String.format("%s:%-3d", name, min);
   }
+
+  public static final Cap UNKNOWN = new Cap();
 }

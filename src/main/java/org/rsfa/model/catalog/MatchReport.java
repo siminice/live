@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +27,9 @@ public class MatchReport {
   private String venue = "";
   private String attendance ="";
   private String weather = "";
-  private Cap[] hroster = new Cap[0];
+  private List<Cap> hroster = Collections.EMPTY_LIST;
   private String hcoach = "";
-  private Cap[] aroster = new Cap[0];
+  private List<Cap> aroster = Collections.EMPTY_LIST;
   private String acoach = "";
   private String ref = "";
   private String assist1 = "";
@@ -40,8 +39,8 @@ public class MatchReport {
 
   public String lineup() {
     return String.join(",", home, away, result, date, league, round, venue, attendance, weather,
-        Arrays.stream(hroster).map(Cap::toString).collect(Collectors.joining(",")), hcoach,
-        Arrays.stream(aroster).map(Cap::toString).collect(Collectors.joining(",")), acoach,
+        hroster.stream().map(Cap::toString).collect(Collectors.joining(",")), hcoach,
+        aroster.stream().map(Cap::toString).collect(Collectors.joining(",")), acoach,
         ref, assist1, assist2, observ);
   }
 
@@ -58,28 +57,32 @@ public class MatchReport {
       r.setVenue(tok[6].trim());
       r.setAttendance(tok[7].trim());
       r.setWeather(tok[8].trim());
-      Cap[] hr = new Cap[ROSTER_SIZE];
-      for (int i=0; i<ROSTER_SIZE; i++) hr[i] = Cap.from(tok[9+i]);
+      List<Cap> hr = Collections.EMPTY_LIST;
+      for (int i=0; i<ROSTER_SIZE; i++) {
+        Cap c = Cap.from(tok[9+i]); if (!c.isUnknown()) hr.add(c);
+      }
       r.setHroster(hr);
-      r.setHcoach(tok[31]);
-      Cap[] ar = new Cap[ROSTER_SIZE];
-      for (int i=0; i<ROSTER_SIZE; i++) ar[i] = Cap.from(tok[32+i]);
+      r.setHcoach(tok[31].trim());
+      List<Cap> ar = Collections.EMPTY_LIST;
+      for (int i=0; i<ROSTER_SIZE; i++) {
+        Cap c = Cap.from(tok[32+i]); if (!c.isUnknown()) ar.add(c);
+      }
       r.setAroster(ar);
-      r.setAcoach(tok[54]);
-      r.setRef(tok[55]);
-      r.setAssist1(tok[56]);
-      r.setAssist2(tok[57]);
-      r.setObserv(tok[58]);
+      r.setAcoach(tok[54].trim());
+      r.setRef(tok[55].trim());
+      r.setAssist1(tok[56].trim());
+      r.setAssist2(tok[57].trim());
+      r.setObserv(tok[58].trim());
     }
     return r;
   }
 
   public void mapNames(Catalog cat) {
-    Arrays.stream(hroster).forEach(c-> {
+    hroster.stream().forEach(c-> {
       Optional<Person> p = cat.findMnem(c.getName());
       if (p.isPresent()) c.setName(p.get().toString());
     });
-    Arrays.stream(aroster).forEach(c-> {
+    aroster.stream().forEach(c-> {
       Optional<Person> p = cat.findMnem(c.getName());
       if (p.isPresent()) c.setName(p.get().toString());
     });
