@@ -21,7 +21,7 @@ public class InMemoryReportService implements ReportService {
 
   @Override
   public MatchReport getReport(String lgn, String home, String away) {
-    List<MatchReport> allRep = getLienups(lgn, false);
+    List<MatchReport> allRep = getLineups(lgn, false);
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away))
         .findFirst().orElse(null);
@@ -30,7 +30,7 @@ public class InMemoryReportService implements ReportService {
 
   @Override
   public MatchReport getReport(String lgn, String home, String away, String date) {
-    List<MatchReport> allRep = getLienups(lgn, false);
+    List<MatchReport> allRep = getLineups(lgn, false);
     MatchReport report =  allRep.stream()
         .filter(r -> r.getHome().equals(home) && r.getAway().equals(away) && r.getDate().equals(date))
         .findFirst().orElse(null);
@@ -41,7 +41,7 @@ public class InMemoryReportService implements ReportService {
    * Helper methods
    */
 
-  private List<MatchReport> getLienups(final String lgn, final Boolean reload) {
+  private List<MatchReport> getLineups(final String lgn, final Boolean reload) {
     List<MatchReport> lg = null;
     if (!reload) lg = reports.get(lgn);
     if (lg==null) lg = loadLineups(lgn);

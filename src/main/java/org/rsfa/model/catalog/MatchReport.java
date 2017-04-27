@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -57,13 +58,13 @@ public class MatchReport {
       r.setVenue(tok[6].trim());
       r.setAttendance(tok[7].trim());
       r.setWeather(tok[8].trim());
-      List<Cap> hr = Collections.EMPTY_LIST;
+      List<Cap> hr = new ArrayList();
       for (int i=0; i<ROSTER_SIZE; i++) {
         Cap c = Cap.from(tok[9+i]); if (!c.isUnknown()) hr.add(c);
       }
       r.setHroster(hr);
       r.setHcoach(tok[31].trim());
-      List<Cap> ar = Collections.EMPTY_LIST;
+      List<Cap> ar = new ArrayList();
       for (int i=0; i<ROSTER_SIZE; i++) {
         Cap c = Cap.from(tok[32+i]); if (!c.isUnknown()) ar.add(c);
       }
