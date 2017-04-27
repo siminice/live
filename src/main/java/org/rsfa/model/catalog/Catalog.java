@@ -34,7 +34,7 @@ public class Catalog {
       while ((s = br.readLine()) != null) {
         final String[] tk = s.split(",");
         if (tk.length > 6) {
-          Person p = new Person(tk[0], tk[1], tk[2], " ", tk[3], tk[4], tk[5], tk[6], " ");
+          Person p = new Person(tk[1], tk[0], tk[2], " ", tk[3], tk[4], tk[5], tk[6], " ");
           p.setDisplayName(p.initial() + p.getLastName());
           cat.add(p);
           System.out.println("Loaded: " + p.serialize());
