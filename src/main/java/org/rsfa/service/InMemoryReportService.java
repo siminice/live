@@ -62,7 +62,7 @@ public class InMemoryReportService implements ReportService {
     String[] tk = lgn.split("/");
     if (tk.length < 3) return null;
     List<MatchReport> reports = new ArrayList<MatchReport>();
-    String filename = location + "lineups-" + tk[2] + ".db";
+    String filename = location + "db/lineups-" + tk[2] + ".db";
     try {
       final FileInputStream fstream = new FileInputStream(filename);
       final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
@@ -82,7 +82,7 @@ public class InMemoryReportService implements ReportService {
   private void attachEvents(final List<MatchReport> reps, final String lgn) {
     String[] tk = lgn.split("/");
     if (tk.length < 3) return;
-    String filename = location + "events-" + tk[2] + ".db";
+    String filename = location + "db/events-" + tk[2] + ".db";
     try {
       final FileInputStream fstream = new FileInputStream(filename);
       final InputStreamReader dis = new InputStreamReader(fstream, "ISO-8859-2");
