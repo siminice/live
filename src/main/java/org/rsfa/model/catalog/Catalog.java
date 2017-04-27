@@ -5,6 +5,7 @@ package org.rsfa.model.catalog;
  */
 
 import lombok.Getter;
+import lombok.extern.log4j.Log4j;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.Optional;
 /**
  * Created by radu on 12/13/16.
  */
+@Log4j
 public class Catalog {
   @Getter
   private Collection<Person> cat;
@@ -37,10 +39,10 @@ public class Catalog {
           Person p = new Person(tk[0], tk[1], tk[2], " ", tk[3], tk[4], tk[5], tk[6], " ");
           p.setDisplayName(p.initial() + p.getLastName());
           cat.add(p);
-          System.out.println("Loaded: " + p.serialize());
         }
       }
       br.close();
+      log.debug("Loaded: " + cat.size() + " catalog items from " + filename);
     } catch (final Exception e) {
       e.printStackTrace();
     }

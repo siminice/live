@@ -36,4 +36,9 @@ public class Person {
   public String toString() {
     return initial() + lastName;
   }
+
+  public String longName() {
+    return firstName + " " + lastName;
+  }
+
 }

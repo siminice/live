@@ -5,16 +5,22 @@ import org.rsfa.internal.FedInfo;
 import org.rsfa.internal.ResultInfo;
 import org.rsfa.internal.ScoreInfo;
 import org.rsfa.internal.SeasonInfo;
+import org.rsfa.model.catalog.Catalog;
+import org.rsfa.model.catalog.Locations;
 import org.rsfa.model.catalog.MatchReport;
+import org.rsfa.model.catalog.Person;
 import org.rsfa.service.FedService;
 import org.rsfa.service.LeagueService;
 import org.rsfa.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by radu on 3/27/17.
@@ -106,6 +112,7 @@ public class LiveRestController {
       @PathVariable("home") String home,
       @PathVariable("away") String away) {
     MatchReport report = reportService.getReport(ctty + "/" + tier + "/" + season, home, away);
+    mapNames(report);
     return new ResponseEntity<MatchReport>(report, HttpStatus.OK);
   }
 
@@ -168,6 +175,52 @@ public class LiveRestController {
       return new ResponseEntity<SeasonInfo>(new SeasonInfo(), HttpStatus.NOT_FOUND);
     }
 
+  }
+
+  @Value("${reports}") private String path;
+
+  private Catalog players = null;
+  private Catalog coaches = null;
+  private Catalog referees = null;
+  private Locations stadiums = null;
+
+  private Catalog retrieve(Catalog c, String filename) {
+    if (c==null) {
+      c.load(path + "catalogs/" + filename + ".dat");
+    }
+    return c;
+  }
+
+  private Locations retrieve(Locations loc, String filename) {
+    if (loc==null) {
+      loc.load(path + "catalogs/" + filename + ".dat");
+    }
+    return loc;
+  }
+
+  private void mapNames(MatchReport report) {
+    retrieve(players, "players");
+    retrieve(coaches, "coaches");
+    retrieve(referees, "referees");
+    Arrays.stream(report.getHroster()).forEach(c-> {
+      Optional<Person> p = players.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
+    });
+    Arrays.stream(report.getAroster()).forEach(c-> {
+      Optional<Person> p = players.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
+    });
+    report.getEvents().stream().forEach(c-> {
+      Optional<Person> p = players.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
+    });
+    Optional<Person> p;
+    p = coaches.findMnem(report.getHcoach());
+    if (p.isPresent()) report.setHcoach(p.get().longName());
+    p = coaches.findMnem(report.getAcoach());
+    if (p.isPresent()) report.setAcoach(p.get().longName());
+    p = referees.findMnem(report.getRef());
+    if (p.isPresent()) report.setRef(p.get().longName());
   }
 
 }

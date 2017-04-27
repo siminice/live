@@ -84,8 +84,8 @@ public class MatchReport {
       if (p.isPresent()) c.setName(p.get().toString());
     });
     events.stream().forEach(c-> {
-      Optional<Person> p = cat.findMnem(c.getMnem());
-      if (p.isPresent()) c.setMnem(p.get().toString());
+      Optional<Person> p = cat.findMnem(c.getName());
+      if (p.isPresent()) c.setName(p.get().toString());
     });
   }
 }

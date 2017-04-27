@@ -10,14 +10,14 @@ import java.util.List;
  */
 @Data
 public class MatchEvent {
-  String mnem = "";
+  String name = "";
   String type = "";
   int min = 0;
 
   public static MatchEvent parse(String line) {
     MatchEvent ev = new MatchEvent();
     if (line != null && line.length() >= 10) {
-      ev.setMnem(line.substring(0,6).trim());
+      ev.setName(line.substring(0,6).trim());
       ev.setType(line.substring(6,7));
       ev.setMin(Integer.parseInt(line.substring(7,10).trim()));
     }
@@ -29,7 +29,7 @@ public class MatchEvent {
     if (line != null) {
       for (String tk : line.split(",")) {
         MatchEvent ev = parse(tk);
-        if (ev.getMnem().length()>0) list.add(ev);
+        if (ev.getName().length()>0) list.add(ev);
       }
     }
     return list;
