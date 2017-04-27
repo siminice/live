@@ -201,9 +201,9 @@ public class LiveRestController {
   }
 
   private void mapNames(MatchReport report) {
-    retrieve(players, "players");
-    retrieve(coaches, "coaches");
-    retrieve(referees, "referees");
+    players = retrieve(players, "players");
+    coaches = retrieve(coaches, "coaches");
+    referees = retrieve(referees, "referees");
     Arrays.stream(report.getHroster()).forEach(c-> {
       Optional<Person> p = players.findMnem(c.getName());
       if (p.isPresent()) c.setName(p.get().toString());
@@ -214,7 +214,7 @@ public class LiveRestController {
     });
     report.getEvents().stream().forEach(c-> {
       Optional<Person> p = players.findMnem(c.getName());
-      if (p.isPresent()) c.setName(p.get().toString());
+      if (p.isPresent()) c.setName(p.get().longName());
     });
     Optional<Person> p;
     p = coaches.findMnem(report.getHcoach());

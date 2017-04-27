@@ -61,15 +61,15 @@ public class MatchReport {
       Cap[] hr = new Cap[ROSTER_SIZE];
       for (int i=0; i<ROSTER_SIZE; i++) hr[i] = Cap.from(tok[9+i]);
       r.setHroster(hr);
-      r.setHcoach(tok[31]);
+      r.setHcoach(tok[31].trim());
       Cap[] ar = new Cap[ROSTER_SIZE];
       for (int i=0; i<ROSTER_SIZE; i++) ar[i] = Cap.from(tok[32+i]);
       r.setAroster(ar);
-      r.setAcoach(tok[54]);
-      r.setRef(tok[55]);
-      r.setAssist1(tok[56]);
-      r.setAssist2(tok[57]);
-      r.setObserv(tok[58]);
+      r.setAcoach(tok[54].trim());
+      r.setRef(tok[55].trim());
+      r.setAssist1(tok[56].trim());
+      r.setAssist2(tok[57].trim());
+      r.setObserv(tok[58].trim());
     }
     return r;
   }
