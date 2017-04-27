@@ -18,7 +18,7 @@ public class InMemoryReportService implements ReportService {
   private Map<String, List<MatchEvent>> events = new HashMap();
   private Catalog players = new Catalog();
 
-  public void InMemoryReportService() {
+  public InMemoryReportService() {
     init();
   }
 
