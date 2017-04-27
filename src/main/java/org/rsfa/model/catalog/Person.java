@@ -10,8 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class Person {
   String mnem = "";
-  String firstName = "";
   String lastName = "";
+  String firstName = "";
   String displayName = "";
   String nationality = "";
   String birthDate = "";
