@@ -1,5 +1,6 @@
 package org.rsfa.model.catalog;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MatchReport {
   public static final int ROSTER_SIZE = 22;
+  public static final int NUM_REPORT_FIELDS = 59;
 
   private String home = "";
   private String away = "";
@@ -33,8 +35,11 @@ public class MatchReport {
   private List<Cap> aroster = Collections.EMPTY_LIST;
   private String acoach = "";
   private String ref = "";
+  @JsonIgnore
   private String assist1 = "";
+  @JsonIgnore
   private String assist2 = "";
+  @JsonIgnore
   private String observ = "";
   private List<MatchEvent> events = Collections.EMPTY_LIST;
 
@@ -48,10 +53,11 @@ public class MatchReport {
   public static MatchReport from(String line) {
     String[] tok = line.split(",");
     MatchReport r = new MatchReport();
-    if (tok.length >= 60) {
+    if (tok.length >= NUM_REPORT_FIELDS) {
       r.setHome(tok[0].trim());
       r.setAway(tok[1].trim());
-      r.setResult(tok[2].trim());
+      int res = Integer.parseInt(tok[2].trim());
+      r.setResult(res>=0? String.format("{}-{}", res/100, res%100) : "?");
       r.setDate(tok[3].trim());
       r.setLeague(tok[4].trim());
       r.setRound(tok[5].trim());
@@ -71,9 +77,9 @@ public class MatchReport {
       r.setAroster(ar);
       r.setAcoach(tok[54].trim());
       r.setRef(tok[55].trim());
-      r.setAssist1(tok[56].trim());
-      r.setAssist2(tok[57].trim());
-      r.setObserv(tok[58].trim());
+      r.setAssist1(null);
+      r.setAssist2(null);
+      r.setObserv(null);
     }
     return r;
   }
