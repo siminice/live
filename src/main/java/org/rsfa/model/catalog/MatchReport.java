@@ -57,7 +57,7 @@ public class MatchReport {
       r.setHome(tok[0].trim());
       r.setAway(tok[1].trim());
       int res = Integer.parseInt(tok[2].trim());
-      r.setResult(res>=0? String.format("{}-{}", res/100, res%100) : "?");
+      r.setResult(res>=0? String.format("%d-%d", res/100, res%100) : "?");
       r.setDate(tok[3].trim());
       r.setLeague(tok[4].trim());
       r.setRound(tok[5].trim());
