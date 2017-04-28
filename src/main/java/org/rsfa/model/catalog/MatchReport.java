@@ -60,13 +60,13 @@ public class MatchReport {
       r.setWeather(tok[8].trim());
       List<Cap> hr = new ArrayList();
       for (int i=0; i<ROSTER_SIZE; i++) {
-        Cap c = Cap.from(tok[9+i]); if (!c.isUnknown()) hr.add(c);
+        Cap c = Cap.from(tok[9+i]); if (!c.equals(Cap.UNKNOWN)) hr.add(c);
       }
       r.setHroster(hr);
       r.setHcoach(tok[31].trim());
       List<Cap> ar = new ArrayList();
       for (int i=0; i<ROSTER_SIZE; i++) {
-        Cap c = Cap.from(tok[32+i]); if (!c.isUnknown()) ar.add(c);
+        Cap c = Cap.from(tok[32+i]); if (!c.equals(Cap.UNKNOWN)) ar.add(c);
       }
       r.setAroster(ar);
       r.setAcoach(tok[54].trim());
