@@ -15,4 +15,4 @@ API="${URL}/api"
 
 curl -s -X GET \
 -H "Authorization: Bearer ${JWT}" \
-"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/rounds/from/${FROM}/to/${TO}"
+"${API}/leagues/${LEAGUE}/${TIER}/${SEASON}/stats/from/${FROM}/to/${TO}"

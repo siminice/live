@@ -169,6 +169,8 @@ public class LiveRestController {
       @PathVariable("round2") int round2) {
     try {
       SeasonInfo si = leagueService.getSeason(ctty, tier, season, round1, round2, false);
+      si.setLeagueInfo(null);
+      si.setResults(null);
       return new ResponseEntity<SeasonInfo>(si, HttpStatus.OK);
     } catch (Exception e) {
       return new ResponseEntity<SeasonInfo>(new SeasonInfo(), HttpStatus.NOT_FOUND);
